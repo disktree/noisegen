@@ -8,6 +8,7 @@ import js.html.audio.AudioContext;
 import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.ScriptProcessorNode;
 import js.lib.Float32Array;
+import js.lib.Promise;
 import js.lib.Uint8Array;
 import om.audio.generator.Noise;
 
@@ -50,7 +51,10 @@ function handleWindowResize(e) {
     canvas.height = window.innerHeight;
 }
 
-function initAudio() {
+function initAudio() : Promise<Map<String,Dynamic>> {
+
+    if( noises != null )
+        return Promise.resolve( noises ); 
 
     audio = new AudioContext();
 
@@ -68,6 +72,25 @@ function initAudio() {
     freqs = new Uint8Array( analyser.frequencyBinCount );
     times = new Uint8Array( analyser.frequencyBinCount );
 
+    function addWorklet( name : String ) {
+        return untyped audio.audioWorklet.addModule('$name.js').then( r -> {
+            return js.Syntax.code("new AudioWorkletNode({0},{1})", audio, name );
+        }); 
+    }
+
+    return Promise.all([
+        addWorklet('white-noise-processor'),
+        addWorklet('pink-noise-processor'),
+        addWorklet('brown-noise-processor'),
+    ]).then( r -> {
+        return noises = [
+            'white' => r[0],
+            'pink' => r[1],
+            'brown' => r[2]
+        ];
+    });
+
+    /*
     var noiseBufferSize = 4096;
 
     var whiteNoise = audio.createScriptProcessor( noiseBufferSize, 1, 1 );
@@ -84,12 +107,7 @@ function initAudio() {
     pinkNoise.onaudioprocess = e -> {
         Noise.generatePinkNoise( e.outputBuffer.getChannelData(0), noiseBufferSize );
     };
-
-    noises = [
-        'white' => whiteNoise,
-        'pink' => pinkNoise,
-        'brown' => brownNoise
-    ];
+    */
 }
 
 function main() {
@@ -110,19 +128,19 @@ function main() {
             var e = document.getElementById( type );
             e.style.textDecoration = 'line-through';
             e.onclick = _ -> {
-                if( audio == null ) {
-                    initAudio();
-                }
-                if( animationFrameId == null ) {
-                    animationFrameId = window.requestAnimationFrame( update );
-                }
-                if( e.style.textDecoration == 'none' ) {
-                    e.style.textDecoration = 'line-through';
-                    noises.get( type ).disconnect();
-                } else {
-                    e.style.textDecoration = 'none';
-                    noises.get( type ).connect( analyser );
-                }
+
+                initAudio().then( _ -> {
+                    if( animationFrameId == null ) {
+                        animationFrameId = window.requestAnimationFrame( update );
+                    }
+                    if( e.style.textDecoration == 'none' ) {
+                        e.style.textDecoration = 'line-through';
+                        noises.get( type ).disconnect();
+                    } else {
+                        e.style.textDecoration = 'none';
+                        noises.get( type ).connect( analyser );
+                    }
+                });
             }
         }
 
