@@ -1,4 +1,5 @@
 
+import js.html.audio.GainNode;
 import js.Browser.document;
 import js.Browser.window;
 import js.html.CanvasElement;
@@ -16,6 +17,7 @@ var colorBg = "#000";
 var colorFg = "#fff";
 
 var audio : AudioContext;
+var gain : GainNode;
 var noise : String;
 var analyser : AnalyserNode;
 var noises : Map<String,Dynamic>;
@@ -58,8 +60,8 @@ function initAudio() : Promise<Map<String,Dynamic>> {
 
     audio = new AudioContext();
 
-    var gain = audio.createGain();
-    gain.gain.value = 0.5;
+    gain = audio.createGain();
+    gain.gain.value = 1.0;
     gain.connect( audio.destination );
 
     analyser = audio.createAnalyser();
@@ -128,7 +130,6 @@ function main() {
             var e = document.getElementById( type );
             e.style.textDecoration = 'line-through';
             e.onclick = _ -> {
-
                 initAudio().then( _ -> {
                     if( animationFrameId == null ) {
                         animationFrameId = window.requestAnimationFrame( update );
@@ -143,6 +144,18 @@ function main() {
                 });
             }
         }
+
+        window.addEventListener( 'wheel', e -> {
+            if( gain != null ) {
+                if( e.deltaY < 0 ) {
+                    gain.gain.value += 0.1;
+                    gain.gain.value = Math.min( gain.gain.value, 1.0 );
+                } else {
+                    gain.gain.value -= 0.1;
+                    gain.gain.value = Math.max( gain.gain.value, 0.0 );
+                }
+            }
+        }, false );
 
         window.addEventListener( 'resize', handleWindowResize, false );
     }
