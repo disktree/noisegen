@@ -1,5 +1,6 @@
--js app.js
+-js web/app.js
 -main App
+-cp src
 -lib om.audio
 -dce full
 -debug
