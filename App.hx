@@ -6,12 +6,8 @@ import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.audio.AnalyserNode;
 import js.html.audio.AudioContext;
-import js.html.audio.AudioBufferSourceNode;
-import js.html.audio.ScriptProcessorNode;
-import js.lib.Float32Array;
 import js.lib.Promise;
 import js.lib.Uint8Array;
-import om.audio.generator.Noise;
 
 var colorBg = "#000";
 var colorFg = "#fff";
@@ -38,6 +34,7 @@ function update( time : Float ) {
     var v : Float, x : Float, y : Float;
     var hw = canvas.width/2, hh = canvas.height/2;
     ctx.clearRect( 0, 0, canvas.width, canvas.height );
+    ctx.strokeStyle = noise;
     ctx.beginPath();
     for( i in 0...analyser.fftSize ) {
         v = i * (Math.PI/2)/180;
@@ -139,7 +136,7 @@ function main() {
                         noises.get( type ).disconnect();
                     } else {
                         e.style.textDecoration = 'none';
-                        noises.get( type ).connect( analyser );
+                        noises.get( noise = type ).connect( analyser );
                     }
                 });
             }
