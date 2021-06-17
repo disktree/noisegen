@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
 		<meta charset="utf-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="Content-Language" content="en">
@@ -9,56 +8,10 @@
 		<meta name="keywords" content="noise,generator,white,pink,brown">
 		<meta name="description" content="">
 		<meta name="theme-color" content="#000">
-
 		<title>NOISEGEN</title>
-
-		<style media="screen">
-			body {
-	            margin: 0;
-				padding: 0;
-	            overflow: hidden;
-				font-family: monospace;
-				background: #000;
-				color: #666;
-				cursor: default;
-			}
-
-	        canvas#spectrum {
-	            position: fixed;
-	            z-index: 0;
-	            user-select: none;
-	        }
-
-	        #noises {
-	            position: fixed;
-	            z-index: 1;
-				top: 1rem;
-				left: 1rem;
-				text-transform: uppercase;
-	            user-select: none;
-	        }
-
-			#noises .noise {
-				padding: 0.1em;
-				cursor: pointer;
-				text-decoration: line-through;
-				user-select: none;
-			}
-			#noises #white.noise {
-				color: white;
-			}
-			#noises #pink.noise {
-				color: #ffc0cb;
-			}
-			#noises #brown.noise {
-				color: #a52a2a;
-			}
-		</style>
-
+		<link rel="stylesheet" href="app.css">
 		<script src="app.js" defer></script>
-
 	</head>
-
 	<body>
 		<canvas id="spectrum"></canvas>
 		<div id="noises">
@@ -68,5 +21,4 @@
 			<span>Noise</span>
 		</div>
 	</body>
-
 </html>

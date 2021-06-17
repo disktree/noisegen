@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: monospace;
+    background: #000;
+    color: #666;
+    cursor: default;
+}
+canvas#spectrum {
+    position: fixed;
+    z-index: 0;
+    user-select: none;
+}
+#noises {
+    position: fixed;
+    z-index: 1;
+    top: 1rem;
+    left: 1rem;
+    text-transform: uppercase;
+    user-select: none;
+}
+#noises .noise {
+    text-decoration: line-through;
+
+}
+#noises .noise.active {
+    text-decoration: none;
+}
+#noises #white.noise {
+    color: white;
+}
+#noises #pink.noise {
+    color: #ffc0cb;
+}
+#noises #brown.noise {
+    color: #a52a2a;
+}
