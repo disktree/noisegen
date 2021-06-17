@@ -1,22 +1,29 @@
 
-import js.html.audio.GainNode;
 import js.Browser.document;
 import js.Browser.window;
 import js.html.CanvasElement;
 import js.html.CanvasRenderingContext2D;
 import js.html.audio.AnalyserNode;
 import js.html.audio.AudioContext;
+import js.html.audio.GainNode;
 import js.lib.Promise;
 import js.lib.Uint8Array;
+
+enum abstract NoiseType(String) from String to String {
+    var white;
+    var pink;
+    var brown;
+}
 
 var colorBg = "#000";
 var colorFg = "#fff";
 
 var audio : AudioContext;
 var gain : GainNode;
-var noise : String;
+var noise : NoiseType;
 var analyser : AnalyserNode;
-var noises : Map<String,Dynamic>;
+var noises : Map<NoiseType,Dynamic>;
+var activeNoises : Array<NoiseType> = [];
 
 var canvas : CanvasElement;
 var ctx : CanvasRenderingContext2D;
@@ -50,7 +57,7 @@ function handleWindowResize(e) {
     canvas.height = window.innerHeight;
 }
 
-function initAudio() : Promise<Map<String,Dynamic>> {
+function initAudio() : Promise<Map<NoiseType,Dynamic>> {
 
     if( noises != null )
         return Promise.resolve( noises ); 
@@ -83,9 +90,9 @@ function initAudio() : Promise<Map<String,Dynamic>> {
         addWorklet('brown-noise-processor'),
     ]).then( r -> {
         return noises = [
-            'white' => r[0],
-            'pink' => r[1],
-            'brown' => r[2]
+            white => r[0],
+            pink => r[1],
+            brown => r[2]
         ];
     });
 
@@ -122,21 +129,21 @@ function main() {
         ctx.fillStyle = colorBg;
         ctx.strokeStyle = colorFg;
 
-        var noiseTypes = ['white','brown','pink'];
+        var noiseTypes = [white, brown, pink];
         for( type in noiseTypes ) {
             var e = document.getElementById( type );
-            e.style.textDecoration = 'line-through';
             e.onclick = _ -> {
-                initAudio().then( _ -> {
+                initAudio().then( (noises:Map<NoiseType,Dynamic>) -> {
                     if( animationFrameId == null ) {
                         animationFrameId = window.requestAnimationFrame( update );
                     }
-                    if( e.style.textDecoration == 'none' ) {
-                        e.style.textDecoration = 'line-through';
-                        noises.get( type ).disconnect();
+                    var n = noises.get( noise = type );
+                    if( e.classList.contains('active') ) {
+                        e.classList.remove( 'active' );
+                        n.disconnect();
                     } else {
-                        e.style.textDecoration = 'none';
-                        noises.get( noise = type ).connect( analyser );
+                        e.classList.add( 'active' );
+                        n.connect( analyser );
                     }
                 });
             }
