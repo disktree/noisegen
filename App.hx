@@ -149,6 +149,8 @@ function main() {
             }
         }
 
+        var volumeElement = document.getElementById("volume");
+        var timer = new haxe.Timer( 2000 );
         window.addEventListener( 'wheel', e -> {
             if( gain != null ) {
                 if( e.deltaY < 0 ) {
@@ -157,6 +159,12 @@ function main() {
                 } else {
                     gain.gain.value -= 0.1;
                     gain.gain.value = Math.max( gain.gain.value, 0.0 );
+                }
+                volumeElement.textContent = 'VOL:'+Std.int(gain.gain.value * 100);
+                timer.run = () -> {
+                    volumeElement.textContent = 'Noise';
+                    timer.stop();
+                    timer = new haxe.Timer( 2000 );
                 }
             }
         }, false );
