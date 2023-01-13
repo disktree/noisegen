@@ -121,7 +121,7 @@ function main() {
     window.onload = () -> {
 
         canvas = cast document.getElementById( 'spectrum' );
-        canvas.style.backgroundColor = '#000';
+        //canvas.style.backgroundColor = '#000';
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 

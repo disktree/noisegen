@@ -3,7 +3,6 @@ body {
     padding: 0;
     overflow: hidden;
     font-family: monospace;
-    background: #000;
     color: #666;
     cursor: default;
 }
@@ -22,7 +21,6 @@ canvas#spectrum {
 }
 #noises .noise {
     text-decoration: line-through;
-
 }
 #noises .noise.active {
     text-decoration: none;
