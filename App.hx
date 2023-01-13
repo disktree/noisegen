@@ -15,8 +15,7 @@ enum abstract NoiseType(String) from String to String {
     var brown;
 }
 
-var colorBg = "#000";
-var colorFg = "#fff";
+var color = { bg: "#000", fg: "#fff" };
 
 var audio : AudioContext;
 var gain : GainNode;
@@ -38,16 +37,14 @@ function update( time : Float ) {
     analyser.getByteFrequencyData( freqs );
     analyser.getByteTimeDomainData( times );
 
-    var v : Float, x : Float, y : Float;
+    var v : Float;
     var hw = canvas.width/2, hh = canvas.height/2;
     ctx.clearRect( 0, 0, canvas.width, canvas.height );
     ctx.strokeStyle = noise;
     ctx.beginPath();
     for( i in 0...analyser.fftSize ) {
         v = i * (Math.PI/2)/180;
-        x = Math.cos(v) * ( 100+ times[i] );
-        y = Math.sin(v) * ( 100+ times[i] );
-        ctx.lineTo( hw + x, hh + y );
+        ctx.lineTo(hw + Math.cos(v) * ( 100 + times[i] ), hh + Math.sin(v) * ( 100 + times[i]) );
     }
     ctx.stroke(); 
 }
@@ -89,11 +86,7 @@ function initAudio() : Promise<Map<NoiseType,Dynamic>> {
         addWorklet('pink-noise-processor'),
         addWorklet('brown-noise-processor'),
     ]).then( r -> {
-        return noises = [
-            white => r[0],
-            pink => r[1],
-            brown => r[2]
-        ];
+        return noises = [white => r[0], pink => r[1], brown => r[2]];
     });
 
     /*
@@ -121,13 +114,11 @@ function main() {
     window.onload = () -> {
 
         canvas = cast document.getElementById( 'spectrum' );
-        //canvas.style.backgroundColor = '#000';
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         ctx = canvas.getContext2d();
-        ctx.fillStyle = colorBg;
-        ctx.strokeStyle = colorFg;
+        ctx.fillStyle = color.bg;
+        ctx.strokeStyle = color.fg;
 
         var noiseTypes = [white, brown, pink];
         for( type in noiseTypes ) {
