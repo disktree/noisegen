@@ -1,36 +1,55 @@
 body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    font-family: monospace;
-    color: #666;
-    cursor: default;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: monospace;
+  color: #666;
+  cursor: default;
 }
+
 canvas#spectrum {
-    position: fixed;
-    z-index: 0;
-    user-select: none;
+  position: fixed;
+  z-index: 0;
+  user-select: none;
 }
+
 #noises {
-    position: fixed;
-    z-index: 1;
-    top: 1rem;
-    left: 1rem;
-    text-transform: uppercase;
-    user-select: none;
+  position: fixed;
+  z-index: 1;
+  top: 1rem;
+  left: 1rem;
+  text-transform: uppercase;
+  user-select: none;
 }
+
 #noises .noise {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
+
 #noises .noise.active {
-    text-decoration: none;
+  text-decoration: none;
 }
+
 #noises #white.noise {
-    color: white;
+  color: white;
 }
+
 #noises #pink.noise {
-    color: #ffc0cb;
+  color: #ffc0cb;
 }
+
 #noises #brown.noise {
-    color: #a52a2a;
+  color: #a52a2a;
+}
+
+#noises #blue.noise {
+  color: blue;
+}
+
+#noises #violet.noise {
+  color: violet;
+}
+
+#noises #velvet.noise {
+  color: darkred;
 }
